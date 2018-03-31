@@ -22,18 +22,36 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
+          - server-dependencies-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          - server-dependencies-
 
-      - run: yarn install
+      - run: npm install
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-        
+          key: server-dependencies-{{ checksum "package.json" }}
+      
+      - restore_cache:
+          keys:
+          - client-dependencies-{{ checksum "./client/package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - client-dependencies-
+
+      - run: npm install --prefix client && npm run build --prefix client
+      
+      - save_cache:
+          paths:
+            - client/node_modules
+          key: client-dependencies-{{ checksum "./client/package.json" }}
+
       # run tests!
-      - run: yarn test
+      - test:
+          override: 
+            - npm test -- --coverage
+          post:
+            - npm install -g codeclimate-test-reporter
+            - codeclimate-test-reporter < coverage/lcov.info
 
 
