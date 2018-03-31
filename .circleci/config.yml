@@ -47,11 +47,9 @@ jobs:
           key: client-dependencies-{{ checksum "./client/package.json" }}
 
       # run tests!
-  test:
-    override: 
-      - npm test -- --coverage
-    post:
-      - npm install -g codeclimate-test-reporter
-      - codeclimate-test-reporter < coverage/lcov.info
+      - run: npm test -- --coverage
+      - run: npm install -g codeclimate-test-reporter
+      - run: codeclimate-test-reporter < coverage/lcov.info
+      
 
 
