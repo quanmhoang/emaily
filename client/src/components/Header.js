@@ -12,6 +12,7 @@ class Header extends Component {
                 return <li><a href="/auth/google">Login with Google</a></li>
             default:
                 return [
+                    <li key="0"><Link to={this.props.auth ? '/surveys': '/'} className="btn teal">Campaigns</Link></li>,
                     <li key="1"><Payments/></li>,
                     <li key="2" style={{ margin: '0 10px'}}>Credits: {this.props.auth.credits}</li>,
                     <li key="3"><a href="/api/logout">Logout</a></li>
